@@ -519,11 +519,11 @@ function _Debug_crash_UNUSED(identifier, fact1, fact2, fact3, fact4)
 
 function _Debug_regionToString(region)
 {
-	if (region.ae.W === region.aj.W)
+	if (region.ai.Y === region.an.Y)
 	{
-		return 'on line ' + region.ae.W;
+		return 'on line ' + region.ai.Y;
 	}
-	return 'on lines ' + region.ae.W + ' through ' + region.aj.W;
+	return 'on lines ' + region.ai.Y + ' through ' + region.an.Y;
 }
 
 
@@ -1857,9 +1857,9 @@ var _Platform_worker = F4(function(impl, flagDecoder, debugMetadata, args)
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aO,
-		impl.aV,
 		impl.aU,
+		impl.a0,
+		impl.a$,
 		function() { return function() {} }
 	);
 });
@@ -2719,9 +2719,9 @@ var _VirtualDom_mapEventTuple = F2(function(func, tuple)
 var _VirtualDom_mapEventRecord = F2(function(func, record)
 {
 	return {
-		C: func(record.C),
-		af: record.af,
-		ac: record.ac
+		F: func(record.F),
+		aj: record.aj,
+		ag: record.ag
 	}
 });
 
@@ -2989,11 +2989,11 @@ function _VirtualDom_makeCallback(eventNode, initialHandler)
 		// 3 = Custom
 
 		var value = result.a;
-		var message = !tag ? value : tag < 3 ? value.a : value.C;
-		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.af;
+		var message = !tag ? value : tag < 3 ? value.a : value.F;
+		var stopPropagation = tag == 1 ? value.b : tag == 3 && value.aj;
 		var currentEventNode = (
 			stopPropagation && event.stopPropagation(),
-			(tag == 2 ? value.b : tag == 3 && value.ac) && event.preventDefault(),
+			(tag == 2 ? value.b : tag == 3 && value.ag) && event.preventDefault(),
 			eventNode
 		);
 		var tagger;
@@ -3943,11 +3943,11 @@ var _Browser_element = _Debugger_element || F4(function(impl, flagDecoder, debug
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aO,
-		impl.aV,
 		impl.aU,
+		impl.a0,
+		impl.a$,
 		function(sendToApp, initialModel) {
-			var view = impl.aW;
+			var view = impl.a1;
 			/**/
 			var domNode = args['node'];
 			//*/
@@ -3979,12 +3979,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 	return _Platform_initialize(
 		flagDecoder,
 		args,
-		impl.aO,
-		impl.aV,
 		impl.aU,
+		impl.a0,
+		impl.a$,
 		function(sendToApp, initialModel) {
-			var divertHrefToApp = impl.ad && impl.ad(sendToApp)
-			var view = impl.aW;
+			var divertHrefToApp = impl.ah && impl.ah(sendToApp)
+			var view = impl.a1;
 			var title = _VirtualDom_doc.title;
 			var bodyNode = _VirtualDom_doc.body;
 			var currNode = _VirtualDom_virtualize(bodyNode);
@@ -3992,12 +3992,12 @@ var _Browser_document = _Debugger_document || F4(function(impl, flagDecoder, deb
 			{
 				_VirtualDom_divertHrefToApp = divertHrefToApp;
 				var doc = view(model);
-				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aI);
+				var nextNode = _VirtualDom_node('body')(_List_Nil)(doc.aO);
 				var patches = _VirtualDom_diff(currNode, nextNode);
 				bodyNode = _VirtualDom_applyPatches(bodyNode, currNode, patches, sendToApp);
 				currNode = nextNode;
 				_VirtualDom_divertHrefToApp = 0;
-				(title !== doc.a) && (_VirtualDom_doc.title = title = doc.a);
+				(title !== doc.b) && (_VirtualDom_doc.title = title = doc.b);
 			});
 		}
 	);
@@ -4053,12 +4053,12 @@ function _Browser_makeAnimator(model, draw)
 
 function _Browser_application(impl)
 {
-	var onUrlChange = impl.aQ;
-	var onUrlRequest = impl.aR;
+	var onUrlChange = impl.aW;
+	var onUrlRequest = impl.aX;
 	var key = function() { key.a(onUrlChange(_Browser_getUrl())); };
 
 	return _Browser_document({
-		ad: function(sendToApp)
+		ah: function(sendToApp)
 		{
 			key.a = sendToApp;
 			_Browser_window.addEventListener('popstate', key);
@@ -4074,9 +4074,9 @@ function _Browser_application(impl)
 					var next = $elm$url$Url$fromString(href).a;
 					sendToApp(onUrlRequest(
 						(next
-							&& curr.aw === next.aw
-							&& curr.an === next.an
-							&& curr.at.a === next.at.a
+							&& curr.aC === next.aC
+							&& curr.as === next.as
+							&& curr.az.a === next.az.a
 						)
 							? $elm$browser$Browser$Internal(next)
 							: $elm$browser$Browser$External(href)
@@ -4084,13 +4084,13 @@ function _Browser_application(impl)
 				}
 			});
 		},
-		aO: function(flags)
+		aU: function(flags)
 		{
-			return A3(impl.aO, flags, _Browser_getUrl(), key);
+			return A3(impl.aU, flags, _Browser_getUrl(), key);
 		},
-		aW: impl.aW,
-		aV: impl.aV,
-		aU: impl.aU
+		a1: impl.a1,
+		a0: impl.a0,
+		a$: impl.a$
 	});
 }
 
@@ -4156,17 +4156,17 @@ var _Browser_decodeEvent = F2(function(decoder, event)
 function _Browser_visibilityInfo()
 {
 	return (typeof _VirtualDom_doc.hidden !== 'undefined')
-		? { s: 'hidden', aJ: 'visibilitychange' }
+		? { v: 'hidden', aP: 'visibilitychange' }
 		:
 	(typeof _VirtualDom_doc.mozHidden !== 'undefined')
-		? { s: 'mozHidden', aJ: 'mozvisibilitychange' }
+		? { v: 'mozHidden', aP: 'mozvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.msHidden !== 'undefined')
-		? { s: 'msHidden', aJ: 'msvisibilitychange' }
+		? { v: 'msHidden', aP: 'msvisibilitychange' }
 		:
 	(typeof _VirtualDom_doc.webkitHidden !== 'undefined')
-		? { s: 'webkitHidden', aJ: 'webkitvisibilitychange' }
-		: { s: 'hidden', aJ: 'visibilitychange' };
+		? { v: 'webkitHidden', aP: 'webkitvisibilitychange' }
+		: { v: 'hidden', aP: 'visibilitychange' };
 }
 
 
@@ -4247,12 +4247,12 @@ var _Browser_call = F2(function(functionName, id)
 function _Browser_getViewport()
 {
 	return {
-		aA: _Browser_getScene(),
-		aD: {
-			aE: _Browser_window.pageXOffset,
-			aF: _Browser_window.pageYOffset,
-			K: _Browser_doc.documentElement.clientWidth,
-			am: _Browser_doc.documentElement.clientHeight
+		aG: _Browser_getScene(),
+		aJ: {
+			aK: _Browser_window.pageXOffset,
+			aL: _Browser_window.pageYOffset,
+			D: _Browser_doc.documentElement.clientWidth,
+			ar: _Browser_doc.documentElement.clientHeight
 		}
 	};
 }
@@ -4262,8 +4262,8 @@ function _Browser_getScene()
 	var body = _Browser_doc.body;
 	var elem = _Browser_doc.documentElement;
 	return {
-		K: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
-		am: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
+		D: Math.max(body.scrollWidth, body.offsetWidth, elem.scrollWidth, elem.offsetWidth, elem.clientWidth),
+		ar: Math.max(body.scrollHeight, body.offsetHeight, elem.scrollHeight, elem.offsetHeight, elem.clientHeight)
 	};
 }
 
@@ -4286,15 +4286,15 @@ function _Browser_getViewportOf(id)
 	return _Browser_withNode(id, function(node)
 	{
 		return {
-			aA: {
-				K: node.scrollWidth,
-				am: node.scrollHeight
+			aG: {
+				D: node.scrollWidth,
+				ar: node.scrollHeight
 			},
-			aD: {
-				aE: node.scrollLeft,
-				aF: node.scrollTop,
-				K: node.clientWidth,
-				am: node.clientHeight
+			aJ: {
+				aK: node.scrollLeft,
+				aL: node.scrollTop,
+				D: node.clientWidth,
+				ar: node.clientHeight
 			}
 		};
 	});
@@ -4324,18 +4324,18 @@ function _Browser_getElement(id)
 		var x = _Browser_window.pageXOffset;
 		var y = _Browser_window.pageYOffset;
 		return {
-			aA: _Browser_getScene(),
-			aD: {
-				aE: x,
-				aF: y,
-				K: _Browser_doc.documentElement.clientWidth,
-				am: _Browser_doc.documentElement.clientHeight
+			aG: _Browser_getScene(),
+			aJ: {
+				aK: x,
+				aL: y,
+				D: _Browser_doc.documentElement.clientWidth,
+				ar: _Browser_doc.documentElement.clientHeight
 			},
-			aL: {
-				aE: x + rect.left,
-				aF: y + rect.top,
-				K: rect.width,
-				am: rect.height
+			aR: {
+				aK: x + rect.left,
+				aL: y + rect.top,
+				D: rect.width,
+				ar: rect.height
 			}
 		};
 	});
@@ -4497,6 +4497,9 @@ var $elm$core$Basics$EQ = 1;
 var $elm$core$Basics$GT = 2;
 var $elm$core$Basics$LT = 0;
 var $author$project$Main$DragEnd = {$: 7};
+var $author$project$Main$GeneratedResult = function (a) {
+	return {$: 15, a: a};
+};
 var $author$project$Main$Tick = function (a) {
 	return {$: 5, a: a};
 };
@@ -4826,25 +4829,25 @@ var $elm$core$Array$treeFromBuilder = F2(
 	});
 var $elm$core$Array$builderToArray = F2(
 	function (reverseNodeList, builder) {
-		if (!builder.f) {
+		if (!builder.g) {
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.i),
+				$elm$core$Elm$JsArray$length(builder.j),
 				$elm$core$Array$shiftStep,
 				$elm$core$Elm$JsArray$empty,
-				builder.i);
+				builder.j);
 		} else {
-			var treeLen = builder.f * $elm$core$Array$branchFactor;
+			var treeLen = builder.g * $elm$core$Array$branchFactor;
 			var depth = $elm$core$Basics$floor(
 				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.j) : builder.j;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.f);
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.k) : builder.k;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.g);
 			return A4(
 				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.i) + treeLen,
+				$elm$core$Elm$JsArray$length(builder.j) + treeLen,
 				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
 				tree,
-				builder.i);
+				builder.j);
 		}
 	});
 var $elm$core$Basics$idiv = _Basics_idiv;
@@ -4857,7 +4860,7 @@ var $elm$core$Array$initializeHelp = F5(
 				return A2(
 					$elm$core$Array$builderToArray,
 					false,
-					{j: nodeList, f: (len / $elm$core$Array$branchFactor) | 0, i: tail});
+					{k: nodeList, g: (len / $elm$core$Array$branchFactor) | 0, j: tail});
 			} else {
 				var leaf = $elm$core$Array$Leaf(
 					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
@@ -4925,7 +4928,7 @@ var $elm$url$Url$Http = 0;
 var $elm$url$Url$Https = 1;
 var $elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
-		return {al: fragment, an: host, ar: path, at: port_, aw: protocol, ax: query};
+		return {aq: fragment, as: host, ax: path, az: port_, aC: protocol, aD: query};
 	});
 var $elm$core$String$contains = _String_contains;
 var $elm$core$String$length = _String_length;
@@ -5210,7 +5213,7 @@ var $elm$time$Time$Every = F2(
 	});
 var $elm$time$Time$State = F2(
 	function (taggers, processes) {
-		return {av: processes, aC: taggers};
+		return {aB: processes, aI: taggers};
 	});
 var $elm$core$Dict$RBEmpty_elm_builtin = {$: -2};
 var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
@@ -5502,7 +5505,7 @@ var $elm$time$Time$spawnHelp = F3(
 	});
 var $elm$time$Time$onEffects = F3(
 	function (router, subs, _v0) {
-		var processes = _v0.av;
+		var processes = _v0.aB;
 		var rightStep = F3(
 			function (_v6, id, _v7) {
 				var spawns = _v7.a;
@@ -5571,7 +5574,7 @@ var $elm$time$Time$millisToPosix = $elm$core$Basics$identity;
 var $elm$time$Time$now = _Time_now($elm$time$Time$millisToPosix);
 var $elm$time$Time$onSelfMsg = F3(
 	function (router, interval, state) {
-		var _v0 = A2($elm$core$Dict$get, interval, state.aC);
+		var _v0 = A2($elm$core$Dict$get, interval, state.aI);
 		if (_v0.$ === 1) {
 			return $elm$core$Task$succeed(state);
 		} else {
@@ -5648,11 +5651,11 @@ var $elm$core$List$head = function (list) {
 var $author$project$Main$find = F2(
 	function (id, current) {
 		var n = current;
-		return _Utils_eq(n.c, id) ? $elm$core$Maybe$Just(current) : $elm$core$List$head(
+		return _Utils_eq(n.a, id) ? $elm$core$Maybe$Just(current) : $elm$core$List$head(
 			A2(
 				$elm$core$List$filterMap,
 				$author$project$Main$find(id),
-				n.b));
+				n.c));
 	});
 var $elm$core$List$drop = F2(
 	function (n, list) {
@@ -5813,16 +5816,20 @@ var $author$project$Main$insertAt = F3(
 var $author$project$Main$modify = F3(
 	function (id, fn, current) {
 		var n = current;
-		return _Utils_eq(n.c, id) ? fn(current) : _Utils_update(
+		return _Utils_eq(n.a, id) ? fn(current) : _Utils_update(
 			n,
 			{
-				b: A2(
+				c: A2(
 					$elm$core$List$map,
 					A2($author$project$Main$modify, id, fn),
-					n.b)
+					n.c)
 			});
 	});
 var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Main$nodeId = function (_v0) {
+	var n = _v0;
+	return n.a;
+};
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -5834,17 +5841,13 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $author$project$Main$nodeId = function (_v0) {
-	var n = _v0;
-	return n.c;
-};
 var $author$project$Main$remove = F2(
 	function (id, _v0) {
 		var n = _v0;
 		return _Utils_update(
 			n,
 			{
-				b: A2(
+				c: A2(
 					$elm$core$List$map,
 					$author$project$Main$remove(id),
 					A2(
@@ -5854,7 +5857,7 @@ var $author$project$Main$remove = F2(
 								$author$project$Main$nodeId(child),
 								id);
 						},
-						n.b))
+						n.c))
 			});
 	});
 var $elm$core$Maybe$map = F2(
@@ -5873,18 +5876,18 @@ var $author$project$Main$shift = F3(
 		return _Utils_update(
 			n,
 			{
-				b: A2(
+				c: A2(
 					$elm$core$List$map,
 					A2($author$project$Main$shift, dx, dy),
-					n.b),
-				w: A2(
+					n.c),
+				z: A2(
 					$elm$core$Maybe$map,
 					function (s) {
 						return _Utils_update(
 							s,
-							{P: s.P + dx, Q: s.Q + dx, R: s.R + dy, S: s.S + dy});
+							{S: s.S + dx, T: s.T + dx, U: s.U + dy, V: s.V + dy});
 					},
-					n.w)
+					n.z)
 			});
 	});
 var $author$project$Main$apply = F2(
@@ -5901,8 +5904,8 @@ var $author$project$Main$apply = F2(
 						return _Utils_update(
 							n,
 							{
-								b: _Utils_ap(
-									n.b,
+								c: _Utils_ap(
+									n.c,
 									_List_fromArray(
 										[child]))
 							});
@@ -5927,7 +5930,7 @@ var $author$project$Main$apply = F2(
 							return _Utils_update(
 								n,
 								{
-									b: A3($author$project$Main$insertAt, index, subtree, n.b)
+									c: A3($author$project$Main$insertAt, index, subtree, n.c)
 								});
 						},
 						A2($author$project$Main$remove, id, document));
@@ -5953,31 +5956,43 @@ var $author$project$Main$apply = F2(
 						var n = _v4;
 						return _Utils_update(
 							n,
-							{s: hidden});
+							{v: hidden});
 					},
 					document);
+			case 5:
+				var id = operation.a;
+				var replacement = operation.b;
+				return _Utils_eq(
+					$author$project$Main$nodeId(replacement),
+					id) ? A3(
+					$author$project$Main$modify,
+					id,
+					function (_v5) {
+						return replacement;
+					},
+					document) : document;
 			default:
 				var id = operation.a;
 				var prompt = operation.b;
 				return A3(
 					$author$project$Main$modify,
 					id,
-					function (_v5) {
-						var n = _v5;
+					function (_v6) {
+						var n = _v6;
 						return _Utils_update(
 							n,
-							{v: prompt});
+							{n: prompt});
 					},
 					document);
 		}
 	});
 var $author$project$Main$applyChange = F2(
 	function (change, document) {
-		return A3($elm$core$List$foldl, $author$project$Main$apply, document, change.l);
+		return A3($elm$core$List$foldl, $author$project$Main$apply, document, change.m);
 	});
 var $author$project$Main$Change = F4(
 	function (title, why, intent, operations) {
-		return {m: intent, l: operations, a: title, n: why};
+		return {f: intent, m: operations, b: title, p: why};
 	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$list = _Json_decodeList;
@@ -5989,6 +6004,10 @@ var $author$project$Main$Add = F2(
 var $author$project$Main$Move = F3(
 	function (a, b, c) {
 		return {$: 1, a: a, b: b, c: c};
+	});
+var $author$project$Main$Replace = F2(
+	function (a, b) {
+		return {$: 5, a: a, b: b};
 	});
 var $author$project$Main$Revise = F2(
 	function (a, b) {
@@ -6028,7 +6047,7 @@ var $elm$json$Json$Decode$nullable = function (decoder) {
 var $elm$json$Json$Decode$string = _Json_decodeString;
 var $author$project$Main$Stroke = F6(
 	function (x1, y1, x2, y2, color, width) {
-		return {L: color, K: width, P: x1, Q: x2, R: y1, S: y2};
+		return {O: color, D: width, S: x1, T: x2, U: y1, V: y2};
 	});
 var $author$project$Main$strokeDecoder = A7(
 	$elm$json$Json$Decode$map6,
@@ -6044,7 +6063,7 @@ function $author$project$Main$cyclic$nodeDecoder() {
 		$elm$json$Json$Decode$map6,
 		F6(
 			function (id, title, prompt, hidden, children, stroke) {
-				return {b: children, s: hidden, c: id, v: prompt, w: stroke, a: title};
+				return {c: children, v: hidden, a: id, n: prompt, z: stroke, b: title};
 			}),
 		A2($elm$json$Json$Decode$field, 'id', $elm$json$Json$Decode$string),
 		A2($elm$json$Json$Decode$field, 'title', $elm$json$Json$Decode$string),
@@ -6097,6 +6116,12 @@ var $author$project$Main$operationDecoder = A2(
 					$author$project$Main$Visibility,
 					A2($elm$json$Json$Decode$field, 'id', $elm$json$Json$Decode$string),
 					A2($elm$json$Json$Decode$field, 'hidden', $elm$json$Json$Decode$bool));
+			case 'replace':
+				return A3(
+					$elm$json$Json$Decode$map2,
+					$author$project$Main$Replace,
+					A2($elm$json$Json$Decode$field, 'id', $elm$json$Json$Decode$string),
+					A2($elm$json$Json$Decode$field, 'node', $author$project$Main$nodeDecoder));
 			case 'revise':
 				return A3(
 					$elm$json$Json$Decode$map2,
@@ -6133,7 +6158,7 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$node = F4(
 	function (id, title, prompt, children) {
-		return {b: children, s: false, c: id, v: prompt, w: $elm$core$Maybe$Nothing, a: title};
+		return {c: children, v: false, a: id, n: prompt, z: $elm$core$Maybe$Nothing, b: title};
 	});
 var $author$project$Main$root = A4($author$project$Main$node, 'scene', 'Paris postcard', 'Draw a postcard of Paris, with the Eiffel Tower on the left and the Seine in the foreground.', _List_Nil);
 var $author$project$Main$chunk = F4(
@@ -6148,12 +6173,12 @@ var $author$project$Main$chunk = F4(
 				F2(
 					function (index, s) {
 						return {
-							b: _List_Nil,
-							s: false,
-							c: id + ('-' + $elm$core$String$fromInt(index)),
-							v: 'Draw this line to contribute to “' + (title + '”.'),
-							w: $elm$core$Maybe$Just(s),
-							a: 'Stroke ' + $elm$core$String$fromInt(index + 1)
+							c: _List_Nil,
+							v: false,
+							a: id + ('-' + $elm$core$String$fromInt(index)),
+							n: 'Draw this line to contribute to “' + (title + '”.'),
+							z: $elm$core$Maybe$Just(s),
+							b: 'Stroke ' + $elm$core$String$fromInt(index + 1)
 						};
 					}),
 				strokes));
@@ -6176,7 +6201,7 @@ var $elm$core$List$concatMap = F2(
 	});
 var $author$project$Main$line = F4(
 	function (x1, y1, x2, y2) {
-		return {L: '#344a49', K: 2, P: x1, Q: x2, R: y1, S: y2};
+		return {O: '#344a49', D: 2, S: x1, T: x2, U: y1, V: y2};
 	});
 var $elm$core$Basics$modBy = _Basics_modBy;
 var $author$project$Main$polyline = function (points) {
@@ -6201,13 +6226,13 @@ var $author$project$Main$withColor = F3(
 	function (color, width, s) {
 		return _Utils_update(
 			s,
-			{L: color, K: width});
+			{O: color, D: width});
 	});
 var $author$project$Main$seedHistory = _List_fromArray(
 	[
 		{
-		m: 'scene',
-		l: _List_fromArray(
+		f: 'scene',
+		m: _List_fromArray(
 			[
 				A2(
 				$author$project$Main$Add,
@@ -6222,12 +6247,12 @@ var $author$project$Main$seedHistory = _List_fromArray(
 				'scene',
 				A4($author$project$Main$node, 'river', 'The Seine', 'Draw the Seine across the foreground.', _List_Nil))
 			]),
-		a: 'Compose a Paris postcard',
-		n: 'Place a recognizable tower above the river, with open sky and room for a small boat.'
+		b: 'Compose a Paris postcard',
+		p: 'Place a recognizable tower above the river, with open sky and room for a small boat.'
 	},
 		{
-		m: 'sky',
-		l: _List_fromArray(
+		f: 'sky',
+		m: _List_fromArray(
 			[
 				A2(
 				$author$project$Main$Add,
@@ -6277,12 +6302,12 @@ var $author$project$Main$seedHistory = _List_fromArray(
 										]))
 								])))))
 			]),
-		a: 'Sketch a little atmosphere',
-		n: 'A few short cloud contours suggest a wide, calm sky.'
+		b: 'Sketch a little atmosphere',
+		p: 'A few short cloud contours suggest a wide, calm sky.'
 	},
 		{
-		m: 'tower',
-		l: _List_fromArray(
+		f: 'tower',
+		m: _List_fromArray(
 			[
 				A2(
 				$author$project$Main$Add,
@@ -6445,12 +6470,12 @@ var $author$project$Main$seedHistory = _List_fromArray(
 									])))
 						])))
 			]),
-		a: 'Build the tower silhouette',
-		n: 'The splayed legs, tapered body and tall spire carry the tower’s identity before any detail is added.'
+		b: 'Build the tower silhouette',
+		p: 'The splayed legs, tapered body and tall spire carry the tower’s identity before any detail is added.'
 	},
 		{
-		m: 'tower',
-		l: _List_fromArray(
+		f: 'tower',
+		m: _List_fromArray(
 			[
 				A2(
 				$author$project$Main$Add,
@@ -6504,12 +6529,12 @@ var $author$project$Main$seedHistory = _List_fromArray(
 									A2($elm$core$List$range, 0, 6))))
 						])))
 			]),
-		a: 'Weave the iron lattice',
-		n: 'Repeated diagonal braces make the legs read as an open iron structure instead of solid columns.'
+		b: 'Weave the iron lattice',
+		p: 'Repeated diagonal braces make the legs read as an open iron structure instead of solid columns.'
 	},
 		{
-		m: 'river',
-		l: _List_fromArray(
+		f: 'river',
+		m: _List_fromArray(
 			[
 				A2(
 				$author$project$Main$Add,
@@ -6574,12 +6599,12 @@ var $author$project$Main$seedHistory = _List_fromArray(
 						},
 						A2($elm$core$List$range, 0, 24))))
 			]),
-		a: 'Let the river cross the foreground',
-		n: 'Long riverbanks and broken horizontal strokes establish depth below the tower.'
+		b: 'Let the river cross the foreground',
+		p: 'Long riverbanks and broken horizontal strokes establish depth below the tower.'
 	},
 		{
-		m: 'river',
-		l: _List_fromArray(
+		f: 'river',
+		m: _List_fromArray(
 			[
 				A2(
 				$author$project$Main$Add,
@@ -6632,8 +6657,8 @@ var $author$project$Main$seedHistory = _List_fromArray(
 										]))
 								])))))
 			]),
-		a: 'Add a boat for scale',
-		n: 'A small boat gives the river a focal point and makes the tower feel monumental.'
+		b: 'Add a boat for scale',
+		p: 'A small boat gives the river a focal point and makes the tower feel monumental.'
 	}
 	]);
 var $elm$core$Maybe$withDefault = F2(
@@ -6672,28 +6697,31 @@ var $author$project$Main$init = function (flags) {
 	var history = A2($elm$core$Result$withDefault, $author$project$Main$seedHistory, restored);
 	return _Utils_Tuple2(
 		{
-			U: $elm$core$Set$fromList(
+			J: $elm$core$Set$fromList(
 				_List_fromArray(
 					['leg-left', 'leg-right', 'spire', 'platforms', 'braces-left', 'braces-right', 'banks', 'ripples', 'boat', 'clouds'])),
 			d: $elm$core$List$length(history),
-			F: A2(
+			A: A2(
 				$elm$core$Maybe$withDefault,
 				'',
 				A2(
 					$elm$core$Maybe$map,
 					function (_v0) {
 						var n = _v0;
-						return n.v;
+						return n.n;
 					},
 					A2(
 						$author$project$Main$find,
 						'tower',
 						A3($elm$core$List$foldl, $author$project$Main$applyChange, $author$project$Main$root, history)))),
-			r: $elm$core$Maybe$Nothing,
-			V: $elm$core$Set$empty,
+			u: $elm$core$Maybe$Nothing,
+			X: $elm$core$Set$empty,
+			B: $elm$core$Maybe$Nothing,
 			e: history,
-			y: note,
-			z: false,
+			t: note,
+			o: $elm$core$Maybe$Nothing,
+			y: false,
+			ac: 0,
 			h: 'tower'
 		},
 		$elm$core$Platform$Cmd$none);
@@ -6706,7 +6734,7 @@ var $elm$browser$Browser$Events$MySub = F3(
 	});
 var $elm$browser$Browser$Events$State = F2(
 	function (subs, pids) {
-		return {as: pids, aB: subs};
+		return {ay: pids, aH: subs};
 	});
 var $elm$browser$Browser$Events$init = $elm$core$Task$succeed(
 	A2($elm$browser$Browser$Events$State, _List_Nil, $elm$core$Dict$empty));
@@ -6740,7 +6768,7 @@ var $elm$core$Dict$fromList = function (assocs) {
 };
 var $elm$browser$Browser$Events$Event = F2(
 	function (key, event) {
-		return {ak: event, ao: key};
+		return {ao: event, at: key};
 	});
 var $elm$browser$Browser$Events$spawn = F3(
 	function (router, key, _v0) {
@@ -6814,7 +6842,7 @@ var $elm$browser$Browser$Events$onEffects = F3(
 			stepLeft,
 			stepBoth,
 			stepRight,
-			state.as,
+			state.ay,
 			$elm$core$Dict$fromList(newSubs),
 			_Utils_Tuple3(_List_Nil, $elm$core$Dict$empty, _List_Nil));
 		var deadPids = _v0.a;
@@ -6842,8 +6870,8 @@ var $elm$browser$Browser$Events$onEffects = F3(
 	});
 var $elm$browser$Browser$Events$onSelfMsg = F3(
 	function (router, _v0, state) {
-		var key = _v0.ao;
-		var event = _v0.ak;
+		var key = _v0.at;
+		var event = _v0.ao;
 		var toMessage = function (_v2) {
 			var subKey = _v2.a;
 			var _v3 = _v2.b;
@@ -6852,7 +6880,7 @@ var $elm$browser$Browser$Events$onSelfMsg = F3(
 			var decoder = _v3.c;
 			return _Utils_eq(subKey, key) ? A2(_Browser_decodeEvent, decoder, event) : $elm$core$Maybe$Nothing;
 		};
-		var messages = A2($elm$core$List$filterMap, toMessage, state.aB);
+		var messages = A2($elm$core$List$filterMap, toMessage, state.aH);
 		return A2(
 			$elm$core$Task$andThen,
 			function (_v1) {
@@ -6883,6 +6911,9 @@ var $elm$browser$Browser$Events$on = F3(
 			A3($elm$browser$Browser$Events$MySub, node, name, decoder));
 	});
 var $elm$browser$Browser$Events$onMouseUp = A2($elm$browser$Browser$Events$on, 0, 'mouseup');
+var $elm$json$Json$Decode$value = _Json_decodeValue;
+var $author$project$Main$regenerated = _Platform_incomingPort('regenerated', $elm$json$Json$Decode$value);
+var $author$project$Main$SaveIntent = {$: 13};
 var $elm$core$Basics$clamp = F3(
 	function (low, high, number) {
 		return (_Utils_cmp(number, low) < 0) ? low : ((_Utils_cmp(number, high) > 0) ? high : number);
@@ -6909,22 +6940,22 @@ var $author$project$Main$encodeStroke = function (s) {
 			[
 				_Utils_Tuple2(
 				'x1',
-				$elm$json$Json$Encode$float(s.P)),
-				_Utils_Tuple2(
-				'y1',
-				$elm$json$Json$Encode$float(s.R)),
-				_Utils_Tuple2(
-				'x2',
-				$elm$json$Json$Encode$float(s.Q)),
-				_Utils_Tuple2(
-				'y2',
 				$elm$json$Json$Encode$float(s.S)),
 				_Utils_Tuple2(
+				'y1',
+				$elm$json$Json$Encode$float(s.U)),
+				_Utils_Tuple2(
+				'x2',
+				$elm$json$Json$Encode$float(s.T)),
+				_Utils_Tuple2(
+				'y2',
+				$elm$json$Json$Encode$float(s.V)),
+				_Utils_Tuple2(
 				'color',
-				$elm$json$Json$Encode$string(s.L)),
+				$elm$json$Json$Encode$string(s.O)),
 				_Utils_Tuple2(
 				'width',
-				$elm$json$Json$Encode$float(s.K))
+				$elm$json$Json$Encode$float(s.D))
 			]));
 };
 var $elm$json$Json$Encode$list = F2(
@@ -6944,25 +6975,25 @@ var $author$project$Main$encodeNode = function (_v0) {
 			[
 				_Utils_Tuple2(
 				'id',
-				$elm$json$Json$Encode$string(n.c)),
-				_Utils_Tuple2(
-				'title',
 				$elm$json$Json$Encode$string(n.a)),
 				_Utils_Tuple2(
+				'title',
+				$elm$json$Json$Encode$string(n.b)),
+				_Utils_Tuple2(
 				'prompt',
-				$elm$json$Json$Encode$string(n.v)),
+				$elm$json$Json$Encode$string(n.n)),
 				_Utils_Tuple2(
 				'hidden',
-				$elm$json$Json$Encode$bool(n.s)),
+				$elm$json$Json$Encode$bool(n.v)),
 				_Utils_Tuple2(
 				'children',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeNode, n.b)),
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeNode, n.c)),
 				_Utils_Tuple2(
 				'stroke',
 				A2(
 					$elm$core$Maybe$withDefault,
 					$elm$json$Json$Encode$null,
-					A2($elm$core$Maybe$map, $author$project$Main$encodeStroke, n.w)))
+					A2($elm$core$Maybe$map, $author$project$Main$encodeStroke, n.z)))
 			]));
 };
 var $elm$json$Json$Encode$int = _Json_wrap;
@@ -7046,6 +7077,21 @@ var $author$project$Main$encodeOperation = function (op) {
 						'hidden',
 						$elm$json$Json$Encode$bool(hidden))
 					]));
+		case 5:
+			var id = op.a;
+			var replacement = op.b;
+			return A2(
+				obj,
+				'replace',
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'id',
+						$elm$json$Json$Encode$string(id)),
+						_Utils_Tuple2(
+						'node',
+						$author$project$Main$encodeNode(replacement))
+					]));
 		default:
 			var id = op.a;
 			var prompt = op.b;
@@ -7069,16 +7115,16 @@ var $author$project$Main$encodeChange = function (c) {
 			[
 				_Utils_Tuple2(
 				'title',
-				$elm$json$Json$Encode$string(c.a)),
+				$elm$json$Json$Encode$string(c.b)),
 				_Utils_Tuple2(
 				'why',
-				$elm$json$Json$Encode$string(c.n)),
+				$elm$json$Json$Encode$string(c.p)),
 				_Utils_Tuple2(
 				'intent',
-				$elm$json$Json$Encode$string(c.m)),
+				$elm$json$Json$Encode$string(c.f)),
 				_Utils_Tuple2(
 				'operations',
-				A2($elm$json$Json$Encode$list, $author$project$Main$encodeOperation, c.l))
+				A2($elm$json$Json$Encode$list, $author$project$Main$encodeOperation, c.m))
 			]));
 };
 var $author$project$Main$encodeHistory = function (changes) {
@@ -7096,31 +7142,39 @@ var $author$project$Main$encodeHistory = function (changes) {
 var $author$project$Main$save = _Platform_outgoingPort('save', $elm$core$Basics$identity);
 var $author$project$Main$commit = F2(
 	function (change, model) {
-		if (!_Utils_eq(
-			model.d,
-			$elm$core$List$length(model.e))) {
+		if (!_Utils_eq(model.o, $elm$core$Maybe$Nothing)) {
 			return _Utils_Tuple2(
 				_Utils_update(
 					model,
-					{y: 'Return to Latest before editing. History stays intact.'}),
+					{t: 'Wait for regeneration to finish before changing the drawing.'}),
 				$elm$core$Platform$Cmd$none);
 		} else {
-			var history = _Utils_ap(
-				model.e,
-				_List_fromArray(
-					[change]));
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{
-						d: $elm$core$List$length(history),
-						r: $elm$core$Maybe$Nothing,
-						e: history,
-						y: change.a + ' · saved locally',
-						z: false
-					}),
-				$author$project$Main$save(
-					$author$project$Main$encodeHistory(history)));
+			if (!_Utils_eq(
+				model.d,
+				$elm$core$List$length(model.e))) {
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{t: 'Return to Latest before editing. History stays intact.'}),
+					$elm$core$Platform$Cmd$none);
+			} else {
+				var history = _Utils_ap(
+					model.e,
+					_List_fromArray(
+						[change]));
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							d: $elm$core$List$length(history),
+							u: $elm$core$Maybe$Nothing,
+							e: history,
+							t: change.b + ' · saved locally',
+							y: false
+						}),
+					$author$project$Main$save(
+						$author$project$Main$encodeHistory(history)));
+			}
 		}
 	});
 var $author$project$Main$documentAt = function (model) {
@@ -7132,6 +7186,19 @@ var $author$project$Main$documentAt = function (model) {
 };
 var $author$project$Main$download = _Platform_outgoingPort('download', $elm$core$Basics$identity);
 var $elm$core$String$fromFloat = _String_fromNumber;
+var $author$project$Main$Generated = F5(
+	function (requestId, revision, node, explanation, model) {
+		return {ap: explanation, au: model, ae: node, aZ: requestId, H: revision};
+	});
+var $elm$json$Json$Decode$map5 = _Json_map5;
+var $author$project$Main$generatedDecoder = A6(
+	$elm$json$Json$Decode$map5,
+	$author$project$Main$Generated,
+	A2($elm$json$Json$Decode$field, 'requestId', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'revision', $elm$json$Json$Decode$int),
+	A2($elm$json$Json$Decode$field, 'node', $author$project$Main$nodeDecoder),
+	A2($elm$json$Json$Decode$field, 'explanation', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'model', $elm$json$Json$Decode$string));
 var $elm$core$Tuple$pair = F2(
 	function (a, b) {
 		return _Utils_Tuple2(a, b);
@@ -7191,39 +7258,13 @@ var $author$project$Main$parentOf = F2(
 					$author$project$Main$nodeId(child),
 					id);
 			},
-			n.b) ? $elm$core$Maybe$Just(current) : $elm$core$List$head(
+			n.c) ? $elm$core$Maybe$Just(current) : $elm$core$List$head(
 			A2(
 				$elm$core$List$filterMap,
 				$author$project$Main$parentOf(id),
-				n.b));
+				n.c));
 	});
-var $author$project$Main$titleOf = F2(
-	function (id, doc) {
-		return A2(
-			$elm$core$Maybe$withDefault,
-			id,
-			A2(
-				$elm$core$Maybe$map,
-				function (_v0) {
-					var n = _v0;
-					return n.a;
-				},
-				A2($author$project$Main$find, id, doc)));
-	});
-var $elm$core$Dict$member = F2(
-	function (key, dict) {
-		var _v0 = A2($elm$core$Dict$get, key, dict);
-		if (!_v0.$) {
-			return true;
-		} else {
-			return false;
-		}
-	});
-var $elm$core$Set$member = F2(
-	function (key, _v0) {
-		var dict = _v0;
-		return A2($elm$core$Dict$member, key, dict);
-	});
+var $author$project$Main$regenerate = _Platform_outgoingPort('regenerate', $elm$core$Basics$identity);
 var $elm$core$Dict$getMin = function (dict) {
 	getMin:
 	while (true) {
@@ -7591,6 +7632,33 @@ var $elm$core$Set$remove = F2(
 		var dict = _v0;
 		return A2($elm$core$Dict$remove, key, dict);
 	});
+var $author$project$Main$titleOf = F2(
+	function (id, doc) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			id,
+			A2(
+				$elm$core$Maybe$map,
+				function (_v0) {
+					var n = _v0;
+					return n.b;
+				},
+				A2($author$project$Main$find, id, doc)));
+	});
+var $elm$core$Dict$member = F2(
+	function (key, dict) {
+		var _v0 = A2($elm$core$Dict$get, key, dict);
+		if (!_v0.$) {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var $elm$core$Set$member = F2(
+	function (key, _v0) {
+		var dict = _v0;
+		return A2($elm$core$Dict$member, key, dict);
+	});
 var $author$project$Main$toggle = F2(
 	function (value, set) {
 		return A2($elm$core$Set$member, value, set) ? A2($elm$core$Set$remove, value, set) : A2($elm$core$Set$insert, value, set);
@@ -7598,287 +7666,420 @@ var $author$project$Main$toggle = F2(
 var $elm$core$String$trim = _String_trim;
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		var doc = $author$project$Main$documentAt(model);
-		switch (msg.$) {
-			case 0:
-				var id = msg.a;
-				var prompt = A2(
-					$elm$core$Maybe$withDefault,
-					'',
-					A2(
-						$elm$core$Maybe$map,
-						function (_v1) {
-							var n = _v1;
-							return n.v;
-						},
-						A2($author$project$Main$find, id, doc)));
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{F: prompt, h: id}),
-					$elm$core$Platform$Cmd$none);
-			case 1:
-				var id = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							U: A2($author$project$Main$toggle, id, model.U)
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 2:
-				var index = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							V: A2($author$project$Main$toggle, index, model.V)
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 3:
-				var value = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							d: A3(
-								$elm$core$Basics$clamp,
-								0,
-								$elm$core$List$length(model.e),
-								A2(
-									$elm$core$Maybe$withDefault,
+		update:
+		while (true) {
+			var doc = $author$project$Main$documentAt(model);
+			switch (msg.$) {
+				case 0:
+					var id = msg.a;
+					var prompt = A2(
+						$elm$core$Maybe$withDefault,
+						'',
+						A2(
+							$elm$core$Maybe$map,
+							function (_v1) {
+								var n = _v1;
+								return n.n;
+							},
+							A2($author$project$Main$find, id, doc)));
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{A: prompt, B: $elm$core$Maybe$Nothing, h: id}),
+						$elm$core$Platform$Cmd$none);
+				case 1:
+					var id = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								J: A2($author$project$Main$toggle, id, model.J)
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 2:
+					var index = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								X: A2($author$project$Main$toggle, index, model.X)
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 3:
+					var value = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								d: A3(
+									$elm$core$Basics$clamp,
+									0,
+									$elm$core$List$length(model.e),
+									A2(
+										$elm$core$Maybe$withDefault,
+										model.d,
+										$elm$core$String$toInt(value))),
+								y: false
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 4:
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								d: _Utils_eq(
 									model.d,
-									$elm$core$String$toInt(value))),
-							z: false
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 4:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							d: _Utils_eq(
-								model.d,
-								$elm$core$List$length(model.e)) ? 0 : model.d,
-							z: !model.z
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 5:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							d: A2(
-								$elm$core$Basics$min,
-								model.d + 1,
-								$elm$core$List$length(model.e)),
-							z: _Utils_cmp(
-								model.d + 1,
-								$elm$core$List$length(model.e)) < 0
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 6:
-				var id = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							r: $elm$core$Maybe$Just(id)
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 7:
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{r: $elm$core$Maybe$Nothing}),
-					$elm$core$Platform$Cmd$none);
-			case 8:
-				var target = msg.a;
-				var inside = msg.b;
-				var _v2 = model.r;
-				if (_v2.$ === 1) {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				} else {
-					var id = _v2.a;
-					var subtree = A2($author$project$Main$find, id, doc);
-					var destination = inside ? A2($author$project$Main$find, target, doc) : A2($author$project$Main$parentOf, target, doc);
-					var _v3 = _Utils_Tuple2(destination, subtree);
-					if ((!_v3.a.$) && (!_v3.b.$)) {
-						var dest = _v3.a.a;
-						var source = _v3.b.a;
-						if ((!_Utils_eq(
-							A2($author$project$Main$find, dest.c, source),
-							$elm$core$Maybe$Nothing)) || ((id === 'scene') || _Utils_eq(id, target))) {
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{r: $elm$core$Maybe$Nothing, y: 'A branch cannot be moved inside itself.'}),
-								$elm$core$Platform$Cmd$none);
-						} else {
-							if (!_Utils_eq(dest.w, $elm$core$Maybe$Nothing)) {
+									$elm$core$List$length(model.e)) ? 0 : model.d,
+								y: !model.y
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 5:
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								d: A2(
+									$elm$core$Basics$min,
+									model.d + 1,
+									$elm$core$List$length(model.e)),
+								y: _Utils_cmp(
+									model.d + 1,
+									$elm$core$List$length(model.e)) < 0
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 6:
+					var id = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								u: $elm$core$Maybe$Just(id)
+							}),
+						$elm$core$Platform$Cmd$none);
+				case 7:
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{u: $elm$core$Maybe$Nothing}),
+						$elm$core$Platform$Cmd$none);
+				case 8:
+					var target = msg.a;
+					var inside = msg.b;
+					var _v2 = model.u;
+					if (_v2.$ === 1) {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						var id = _v2.a;
+						var subtree = A2($author$project$Main$find, id, doc);
+						var destination = inside ? A2($author$project$Main$find, target, doc) : A2($author$project$Main$parentOf, target, doc);
+						var _v3 = _Utils_Tuple2(destination, subtree);
+						if ((!_v3.a.$) && (!_v3.b.$)) {
+							var dest = _v3.a.a;
+							var source = _v3.b.a;
+							if ((!_Utils_eq(
+								A2($author$project$Main$find, dest.a, source),
+								$elm$core$Maybe$Nothing)) || ((id === 'scene') || _Utils_eq(id, target))) {
 								return _Utils_Tuple2(
 									_Utils_update(
 										model,
-										{r: $elm$core$Maybe$Nothing, y: 'Drop inside an intent branch, not a stroke.'}),
+										{u: $elm$core$Maybe$Nothing, t: 'A branch cannot be moved inside itself.'}),
 									$elm$core$Platform$Cmd$none);
 							} else {
-								var remaining = A2(
-									$elm$core$List$filter,
-									function (child) {
-										return !_Utils_eq(
-											$author$project$Main$nodeId(child),
-											id);
-									},
-									dest.b);
-								var position = inside ? $elm$core$List$length(remaining) : A2($author$project$Main$indexOf, target, remaining);
-								return A2(
-									$author$project$Main$commit,
-									{
-										m: id,
-										l: _List_fromArray(
-											[
-												A3($author$project$Main$Move, id, dest.c, position)
-											]),
-										a: 'Rearrange ' + A2($author$project$Main$titleOf, id, doc),
-										n: inside ? ('Move this work into “' + (dest.a + '”. Geometry is preserved; its purpose may need revising.')) : ('Change drawing order by moving this chunk before “' + (A2($author$project$Main$titleOf, target, doc) + '”.'))
-									},
-									model);
+								if (!_Utils_eq(dest.z, $elm$core$Maybe$Nothing)) {
+									return _Utils_Tuple2(
+										_Utils_update(
+											model,
+											{u: $elm$core$Maybe$Nothing, t: 'Drop inside an intent branch, not a stroke.'}),
+										$elm$core$Platform$Cmd$none);
+								} else {
+									var remaining = A2(
+										$elm$core$List$filter,
+										function (child) {
+											return !_Utils_eq(
+												$author$project$Main$nodeId(child),
+												id);
+										},
+										dest.c);
+									var position = inside ? $elm$core$List$length(remaining) : A2($author$project$Main$indexOf, target, remaining);
+									return A2(
+										$author$project$Main$commit,
+										{
+											f: id,
+											m: _List_fromArray(
+												[
+													A3($author$project$Main$Move, id, dest.a, position)
+												]),
+											b: 'Rearrange ' + A2($author$project$Main$titleOf, id, doc),
+											p: inside ? ('Move this work into “' + (dest.b + '”. Geometry is preserved; its purpose may need revising.')) : ('Change drawing order by moving this chunk before “' + (A2($author$project$Main$titleOf, target, doc) + '”.'))
+										},
+										model);
+								}
 							}
+						} else {
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{u: $elm$core$Maybe$Nothing}),
+								$elm$core$Platform$Cmd$none);
 						}
-					} else {
-						return _Utils_Tuple2(
-							_Utils_update(
-								model,
-								{r: $elm$core$Maybe$Nothing}),
-							$elm$core$Platform$Cmd$none);
 					}
-				}
-			case 9:
-				var direction = msg.a;
-				var _v4 = A2($author$project$Main$parentOf, model.h, doc);
-				if (_v4.$ === 1) {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				} else {
-					var parent = _v4.a;
-					var old = A2($author$project$Main$indexOf, model.h, parent.b);
-					var target = A3(
-						$elm$core$Basics$clamp,
-						0,
-						$elm$core$List$length(parent.b) - 1,
-						old + direction);
-					return _Utils_eq(old, target) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : A2(
-						$author$project$Main$commit,
-						{
-							m: model.h,
-							l: _List_fromArray(
-								[
-									A3($author$project$Main$Move, model.h, parent.c, target)
-								]),
-							a: 'Reorder ' + A2($author$project$Main$titleOf, model.h, doc),
-							n: 'Move the entire chunk in the paint sequence. Later siblings paint on top of earlier siblings.'
-						},
-						model);
-				}
-			case 10:
-				var dx = msg.a;
-				var dy = msg.b;
-				return A2(
-					$author$project$Main$commit,
-					{
-						m: model.h,
-						l: _List_fromArray(
-							[
-								A3($author$project$Main$Translate, model.h, dx, dy)
-							]),
-						a: 'Move ' + A2($author$project$Main$titleOf, model.h, doc),
-						n: 'Translate this intention’s strokes together by (' + ($elm$core$String$fromFloat(dx) + (', ' + ($elm$core$String$fromFloat(dy) + ') without changing their grouping.')))
-					},
-					model);
-			case 11:
-				var _v5 = A2($author$project$Main$find, model.h, doc);
-				if (!_v5.$) {
-					var n = _v5.a;
+				case 9:
+					var direction = msg.a;
+					var _v4 = A2($author$project$Main$parentOf, model.h, doc);
+					if (_v4.$ === 1) {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						var parent = _v4.a;
+						var old = A2($author$project$Main$indexOf, model.h, parent.c);
+						var target = A3(
+							$elm$core$Basics$clamp,
+							0,
+							$elm$core$List$length(parent.c) - 1,
+							old + direction);
+						return _Utils_eq(old, target) ? _Utils_Tuple2(model, $elm$core$Platform$Cmd$none) : A2(
+							$author$project$Main$commit,
+							{
+								f: model.h,
+								m: _List_fromArray(
+									[
+										A3($author$project$Main$Move, model.h, parent.a, target)
+									]),
+								b: 'Reorder ' + A2($author$project$Main$titleOf, model.h, doc),
+								p: 'Move the entire chunk in the paint sequence. Later siblings paint on top of earlier siblings.'
+							},
+							model);
+					}
+				case 10:
+					var dx = msg.a;
+					var dy = msg.b;
 					return A2(
 						$author$project$Main$commit,
 						{
-							m: n.c,
-							l: _List_fromArray(
+							f: model.h,
+							m: _List_fromArray(
 								[
-									A2($author$project$Main$Visibility, n.c, !n.s)
+									A3($author$project$Main$Translate, model.h, dx, dy)
 								]),
-							a: _Utils_ap(
-								n.s ? 'Show ' : 'Hide ',
-								n.a),
-							n: 'Change visibility of this whole chunk, retaining all strokes and their intentions.'
+							b: 'Move ' + A2($author$project$Main$titleOf, model.h, doc),
+							p: 'Translate this intention’s strokes together by (' + ($elm$core$String$fromFloat(dx) + (', ' + ($elm$core$String$fromFloat(dy) + ') without changing their grouping.')))
 						},
 						model);
-				} else {
-					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-				}
-			case 12:
-				var value = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
+				case 11:
+					var _v5 = A2($author$project$Main$find, model.h, doc);
+					if (!_v5.$) {
+						var n = _v5.a;
+						return A2(
+							$author$project$Main$commit,
+							{
+								f: n.a,
+								m: _List_fromArray(
+									[
+										A2($author$project$Main$Visibility, n.a, !n.v)
+									]),
+								b: _Utils_ap(
+									n.v ? 'Show ' : 'Hide ',
+									n.b),
+								p: 'Change visibility of this whole chunk, retaining all strokes and their intentions.'
+							},
+							model);
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				case 12:
+					var value = msg.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{A: value}),
+						$elm$core$Platform$Cmd$none);
+				case 14:
+					var _v6 = A2($author$project$Main$find, model.h, doc);
+					if (!_v6.$) {
+						var n = _v6.a;
+						var $temp$msg = $author$project$Main$SaveIntent,
+							$temp$model = _Utils_update(
+							model,
+							{A: n.n});
+						msg = $temp$msg;
+						model = $temp$model;
+						continue update;
+					} else {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					}
+				case 13:
+					if ((!_Utils_eq(model.o, $elm$core$Maybe$Nothing)) || (!_Utils_eq(
+						model.d,
+						$elm$core$List$length(model.e)))) {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						if ($elm$core$String$isEmpty(
+							$elm$core$String$trim(model.A))) {
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{
+										B: $elm$core$Maybe$Just('An intention needs some text.')
+									}),
+								$elm$core$Platform$Cmd$none);
+						} else {
+							var _v7 = A2($author$project$Main$find, model.h, doc);
+							if (_v7.$ === 1) {
+								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+							} else {
+								var subtree = _v7.a;
+								var request = {
+									a: model.ac + 1,
+									f: model.h,
+									n: model.A,
+									H: $elm$core$List$length(model.e)
+								};
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											B: $elm$core$Maybe$Nothing,
+											t: 'Redrawing this intention and all its children…',
+											o: $elm$core$Maybe$Just(request),
+											y: false,
+											ac: request.a
+										}),
+									$author$project$Main$regenerate(
+										$elm$json$Json$Encode$object(
+											_List_fromArray(
+												[
+													_Utils_Tuple2(
+													'requestId',
+													$elm$json$Json$Encode$int(request.a)),
+													_Utils_Tuple2(
+													'revision',
+													$elm$json$Json$Encode$int(request.H)),
+													_Utils_Tuple2(
+													'prompt',
+													$elm$json$Json$Encode$string(request.n)),
+													_Utils_Tuple2(
+													'subtree',
+													$author$project$Main$encodeNode(subtree)),
+													_Utils_Tuple2(
+													'document',
+													$author$project$Main$encodeNode(doc))
+												]))));
+							}
+						}
+					}
+				case 15:
+					var value = msg.a;
+					var _v8 = model.o;
+					if (_v8.$ === 1) {
+						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+					} else {
+						var request = _v8.a;
+						if (!_Utils_eq(
+							A2(
+								$elm$json$Json$Decode$decodeValue,
+								A2($elm$json$Json$Decode$field, 'requestId', $elm$json$Json$Decode$int),
+								value),
+							$elm$core$Result$Ok(request.a))) {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						} else {
+							var _v9 = A2($elm$json$Json$Decode$decodeValue, $author$project$Main$generatedDecoder, value);
+							if (_v9.$ === 1) {
+								var message = A2(
+									$elm$core$Result$withDefault,
+									'The model response could not be read. Your drawing has not changed.',
+									A2(
+										$elm$json$Json$Decode$decodeValue,
+										A2($elm$json$Json$Decode$field, 'error', $elm$json$Json$Decode$string),
+										value));
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											B: $elm$core$Maybe$Just(message),
+											t: 'Regeneration failed. Your previous drawing is intact.',
+											o: $elm$core$Maybe$Nothing
+										}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var result = _v9.a;
+								if ((!_Utils_eq(result.H, request.H)) || ((!_Utils_eq(
+									$elm$core$List$length(model.e),
+									request.H)) || ((!_Utils_eq(model.d, request.H)) || (!_Utils_eq(
+									$author$project$Main$nodeId(result.ae),
+									request.f))))) {
+									return _Utils_Tuple2(
+										_Utils_update(
+											model,
+											{
+												B: $elm$core$Maybe$Just('The document or history position changed. Return to Latest and try again.'),
+												t: 'Discarded a stale model response.',
+												o: $elm$core$Maybe$Nothing
+											}),
+										$elm$core$Platform$Cmd$none);
+								} else {
+									var cleared = _Utils_update(
+										model,
+										{
+											J: A2($elm$core$Set$remove, request.f, model.J),
+											A: request.n,
+											B: $elm$core$Maybe$Nothing,
+											o: $elm$core$Maybe$Nothing,
+											h: request.f
+										});
+									return A2(
+										$author$project$Main$commit,
+										{
+											f: request.f,
+											m: _List_fromArray(
+												[
+													A2($author$project$Main$Replace, request.f, result.ae)
+												]),
+											b: 'Redraw ' + A2($author$project$Main$titleOf, request.f, doc),
+											p: result.ap + (' · Generated by ' + result.au)
+										},
+										cleared);
+								}
+							}
+						}
+					}
+				case 16:
+					return _Utils_Tuple2(
 						model,
-						{F: value}),
-					$elm$core$Platform$Cmd$none);
-			case 13:
-				return $elm$core$String$isEmpty(
-					$elm$core$String$trim(model.F)) ? _Utils_Tuple2(
-					_Utils_update(
+						$author$project$Main$download(
+							$elm$json$Json$Encode$object(
+								_List_fromArray(
+									[
+										_Utils_Tuple2(
+										'kind',
+										$elm$json$Json$Encode$string('json')),
+										_Utils_Tuple2(
+										'data',
+										$author$project$Main$encodeHistory(model.e))
+									]))));
+				case 17:
+					return _Utils_Tuple2(
 						model,
-						{y: 'An intention needs some text.'}),
-					$elm$core$Platform$Cmd$none) : A2(
-					$author$project$Main$commit,
-					{
-						m: model.h,
-						l: _List_fromArray(
-							[
-								A2($author$project$Main$Revise, model.h, model.F)
-							]),
-						a: 'Revise ' + A2($author$project$Main$titleOf, model.h, doc),
-						n: 'Record a new intention while preserving the previous wording in history. This prototype does not regenerate geometry.'
-					},
-					model);
-			case 14:
-				return _Utils_Tuple2(
-					model,
-					$author$project$Main$download(
-						$elm$json$Json$Encode$object(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									'kind',
-									$elm$json$Json$Encode$string('json')),
-									_Utils_Tuple2(
-									'data',
-									$author$project$Main$encodeHistory(model.e))
-								]))));
-			case 15:
-				return _Utils_Tuple2(
-					model,
-					$author$project$Main$download(
-						$elm$json$Json$Encode$object(
-							_List_fromArray(
-								[
-									_Utils_Tuple2(
-									'kind',
-									$elm$json$Json$Encode$string('svg'))
-								]))));
-			default:
-				var _v6 = $author$project$Main$init($elm$json$Json$Encode$null);
-				var fresh = _v6.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						fresh,
-						{y: 'Started a fresh Paris postcard'}),
-					$author$project$Main$save(
-						$author$project$Main$encodeHistory(fresh.e)));
+						$author$project$Main$download(
+							$elm$json$Json$Encode$object(
+								_List_fromArray(
+									[
+										_Utils_Tuple2(
+										'kind',
+										$elm$json$Json$Encode$string('svg'))
+									]))));
+				default:
+					var _v10 = $author$project$Main$init($elm$json$Json$Encode$null);
+					var fresh = _v10.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							fresh,
+							{t: 'Started a fresh Paris postcard'}),
+						$author$project$Main$save(
+							$author$project$Main$encodeHistory(fresh.e)));
+			}
 		}
 	});
-var $elm$json$Json$Decode$value = _Json_decodeValue;
-var $author$project$Main$Export = {$: 14};
-var $author$project$Main$ExportSvg = {$: 15};
+var $author$project$Main$Export = {$: 16};
+var $author$project$Main$ExportSvg = {$: 17};
 var $author$project$Main$Play = {$: 4};
 var $author$project$Main$Seek = function (a) {
 	return {$: 3, a: a};
@@ -7934,16 +8135,16 @@ var $elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
 var $author$project$Main$drawNode = F4(
 	function (selected, inherited, hidden, _v0) {
 		var n = _v0;
-		var invisible = hidden || n.s;
-		var active = inherited || _Utils_eq(n.c, selected);
+		var invisible = hidden || n.v;
+		var active = inherited || _Utils_eq(n.a, selected);
 		var children = A2(
 			$elm$core$List$concatMap,
 			A3($author$project$Main$drawNode, selected, active, invisible),
-			n.b);
+			n.c);
 		if (invisible) {
 			return _List_Nil;
 		} else {
-			var _v1 = n.w;
+			var _v1 = n.z;
 			if (_v1.$ === 1) {
 				return children;
 			} else {
@@ -7956,26 +8157,27 @@ var $author$project$Main$drawNode = F4(
 							_List_fromArray(
 								[
 									$elm$svg$Svg$Attributes$x1(
-									$elm$core$String$fromFloat(s.P)),
-									$elm$svg$Svg$Attributes$y1(
-									$elm$core$String$fromFloat(s.R)),
-									$elm$svg$Svg$Attributes$x2(
-									$elm$core$String$fromFloat(s.Q)),
-									$elm$svg$Svg$Attributes$y2(
 									$elm$core$String$fromFloat(s.S)),
+									$elm$svg$Svg$Attributes$y1(
+									$elm$core$String$fromFloat(s.U)),
+									$elm$svg$Svg$Attributes$x2(
+									$elm$core$String$fromFloat(s.T)),
+									$elm$svg$Svg$Attributes$y2(
+									$elm$core$String$fromFloat(s.V)),
 									$elm$svg$Svg$Attributes$stroke(
-									active ? '#cc754b' : s.L),
+									(active && (s.D < 8)) ? '#cc754b' : s.O),
 									$elm$svg$Svg$Attributes$strokeWidth(
 									$elm$core$String$fromFloat(
-										active ? (s.K + 0.35) : s.K)),
-									$elm$svg$Svg$Attributes$strokeLinecap('round'),
-									A2($elm$html$Html$Attributes$attribute, 'data-color', s.L),
+										active ? (s.D + 0.35) : s.D)),
+									$elm$svg$Svg$Attributes$strokeLinecap(
+									(s.D > 8) ? 'butt' : 'round'),
+									A2($elm$html$Html$Attributes$attribute, 'data-color', s.O),
 									A2(
 									$elm$html$Html$Attributes$attribute,
 									'data-width',
-									$elm$core$String$fromFloat(s.K)),
+									$elm$core$String$fromFloat(s.D)),
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$Select(n.c)),
+									$author$project$Main$Select(n.a)),
 									$elm$svg$Svg$Attributes$class('drawn-stroke')
 								]),
 							_List_fromArray(
@@ -7985,7 +8187,7 @@ var $author$project$Main$drawNode = F4(
 									_List_Nil,
 									_List_fromArray(
 										[
-											$elm$html$Html$text(n.v)
+											$elm$html$Html$text(n.n)
 										]))
 								]))
 						]),
@@ -8074,14 +8276,14 @@ var $elm$core$List$sum = function (numbers) {
 };
 var $author$project$Main$strokeCount = function (_v0) {
 	var n = _v0;
-	return (_Utils_eq(n.w, $elm$core$Maybe$Nothing) ? 0 : 1) + $elm$core$List$sum(
-		A2($elm$core$List$map, $author$project$Main$strokeCount, n.b));
+	return (_Utils_eq(n.z, $elm$core$Maybe$Nothing) ? 0 : 1) + $elm$core$List$sum(
+		A2($elm$core$List$map, $author$project$Main$strokeCount, n.c));
 };
 var $author$project$Main$describe = function (op) {
 	switch (op.$) {
 		case 0:
 			var n = op.b;
-			return '+ ' + (n.a + (' · ' + ($elm$core$String$fromInt(
+			return '+ ' + (n.b + (' · ' + ($elm$core$String$fromInt(
 				$author$project$Main$strokeCount(n)) + ' strokes')));
 		case 1:
 			var id = op.a;
@@ -8099,6 +8301,10 @@ var $author$project$Main$describe = function (op) {
 			return _Utils_ap(
 				hidden ? 'Hide ' : 'Show ',
 				id);
+		case 5:
+			var replacement = op.b;
+			return '↻ Replace subtree · ' + ($elm$core$String$fromInt(
+				$author$project$Main$strokeCount(replacement)) + ' generated strokes');
 		default:
 			var prompt = op.b;
 			return '✎ “' + (prompt + '”');
@@ -8111,7 +8317,7 @@ var $elm$html$Html$Attributes$title = $elm$html$Html$Attributes$stringProperty('
 var $author$project$Main$historyView = F3(
 	function (model, index, change) {
 		var future = _Utils_cmp(index, model.d) > -1;
-		var expanded = A2($elm$core$Set$member, index, model.V);
+		var expanded = A2($elm$core$Set$member, index, model.X);
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -8158,7 +8364,7 @@ var $author$project$Main$historyView = F3(
 								]),
 							_List_fromArray(
 								[
-									$elm$html$Html$text(change.a),
+									$elm$html$Html$text(change.b),
 									A2(
 									$elm$html$Html$span,
 									_List_Nil,
@@ -8177,7 +8383,7 @@ var $author$project$Main$historyView = F3(
 						]),
 					_List_fromArray(
 						[
-							$elm$html$Html$text(change.n)
+							$elm$html$Html$text(change.p)
 						])),
 					expanded ? A2(
 					$elm$html$Html$div,
@@ -8201,7 +8407,7 @@ var $author$project$Main$historyView = F3(
 											$author$project$Main$describe(op))
 										]));
 							},
-							change.l),
+							change.m),
 						_List_fromArray(
 							[
 								A2(
@@ -8210,7 +8416,7 @@ var $author$project$Main$historyView = F3(
 									[
 										$elm$html$Html$Attributes$class('text-button'),
 										$elm$html$Html$Events$onClick(
-										$author$project$Main$Select(change.m))
+										$author$project$Main$Select(change.f))
 									]),
 								_List_fromArray(
 									[
@@ -8228,10 +8434,10 @@ var $author$project$Main$Nudge = F2(
 	function (a, b) {
 		return {$: 10, a: a, b: b};
 	});
+var $author$project$Main$Redraw = {$: 14};
 var $author$project$Main$Reorder = function (a) {
 	return {$: 9, a: a};
 };
-var $author$project$Main$SaveIntent = {$: 13};
 var $elm$html$Html$details = _VirtualDom_node('details');
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -8274,6 +8480,12 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$json$Json$Decode$map,
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Attributes$rows = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'rows',
+		$elm$core$String$fromInt(n));
 };
 var $elm$html$Html$summary = _VirtualDom_node('summary');
 var $elm$html$Html$textarea = _VirtualDom_node('textarea');
@@ -8361,7 +8573,7 @@ var $author$project$Main$inspector = F3(
 						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$text(n.a)
+								$elm$html$Html$text(n.b)
 							])),
 						A2(
 						$elm$html$Html$p,
@@ -8371,7 +8583,7 @@ var $author$project$Main$inspector = F3(
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(n.v)
+								$elm$html$Html$text(n.n)
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -8444,16 +8656,29 @@ var $author$project$Main$inspector = F3(
 											])),
 										A4(
 										$author$project$Main$tool,
-										live && (n.c !== 'scene'),
+										live && (n.a !== 'scene'),
 										'↑',
 										'Earlier in drawing order',
 										$author$project$Main$Reorder(-1)),
 										A4(
 										$author$project$Main$tool,
-										live && (n.c !== 'scene'),
+										live && (n.a !== 'scene'),
 										'↓',
 										'Later in drawing order',
 										$author$project$Main$Reorder(1))
+									])),
+								A2(
+								$elm$html$Html$button,
+								_List_fromArray(
+									[
+										$elm$html$Html$Events$onClick($author$project$Main$Redraw),
+										$elm$html$Html$Attributes$disabled(!live),
+										$elm$html$Html$Attributes$class('primary compact'),
+										$elm$html$Html$Attributes$title('Generate a new variation using this saved intention')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text('↻ Redraw')
 									])),
 								A2(
 								$elm$html$Html$button,
@@ -8466,7 +8691,7 @@ var $author$project$Main$inspector = F3(
 								_List_fromArray(
 									[
 										$elm$html$Html$text(
-										n.s ? 'Show chunk' : 'Hide chunk')
+										n.v ? 'Show chunk' : 'Hide chunk')
 									]))
 							])),
 						A2(
@@ -8488,10 +8713,11 @@ var $author$project$Main$inspector = F3(
 								$elm$html$Html$textarea,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$value(model.F),
+										$elm$html$Html$Attributes$value(model.A),
 										$elm$html$Html$Events$onInput($author$project$Main$Edit),
 										$elm$html$Html$Attributes$disabled(!live),
-										A2($elm$html$Html$Attributes$attribute, 'aria-label', 'Intention text')
+										A2($elm$html$Html$Attributes$attribute, 'aria-label', 'Intention text'),
+										$elm$html$Html$Attributes$rows(4)
 									]),
 								_List_Nil),
 								A2(
@@ -8499,22 +8725,55 @@ var $author$project$Main$inspector = F3(
 								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Wording changes are recorded. Geometry is not regenerated.')
+										$elm$html$Html$text('AI will redraw this entire subtree. Other branches stay unchanged, and the old version remains in history.')
 									])),
 								A2(
 								$elm$html$Html$button,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('quiet compact'),
+										$elm$html$Html$Attributes$class('primary'),
 										$elm$html$Html$Attributes$disabled(!live),
 										$elm$html$Html$Events$onClick($author$project$Main$SaveIntent)
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Record intention')
+										$elm$html$Html$text(
+										_Utils_eq(model.o, $elm$core$Maybe$Nothing) ? 'Redraw subtree with AI' : 'Redrawing…')
 									]))
 							])),
-						live ? $elm$html$Html$text('') : A2(
+						function () {
+						var _v1 = model.B;
+						if (!_v1.$) {
+							var message = _v1.a;
+							return A2(
+								$elm$html$Html$p,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$class('generation-error'),
+										A2($elm$html$Html$Attributes$attribute, 'role', 'alert')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(message)
+									]));
+						} else {
+							return $elm$html$Html$text('');
+						}
+					}(),
+						(!_Utils_eq(model.o, $elm$core$Maybe$Nothing)) ? A2(
+						$elm$html$Html$p,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('generation-progress'),
+								A2($elm$html$Html$Attributes$attribute, 'role', 'status')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Interpreting the intention and drawing its parts…')
+							])) : $elm$html$Html$text(''),
+						_Utils_eq(
+						model.d,
+						$elm$core$List$length(model.e)) ? $elm$html$Html$text('') : A2(
 						$elm$html$Html$p,
 						_List_fromArray(
 							[
@@ -8601,11 +8860,11 @@ var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $author$project$Main$treeView = F4(
 	function (model, doc, depth, _v0) {
 		var n = _v0;
-		var selected = _Utils_eq(n.c, model.h);
+		var selected = _Utils_eq(n.a, model.h);
 		var live = _Utils_eq(
 			model.d,
-			$elm$core$List$length(model.e));
-		var leaf = !_Utils_eq(n.w, $elm$core$Maybe$Nothing);
+			$elm$core$List$length(model.e)) && _Utils_eq(model.o, $elm$core$Maybe$Nothing);
+		var leaf = !_Utils_eq(n.z, $elm$core$Maybe$Nothing);
 		var droppable = function (inside) {
 			return _List_fromArray(
 				[
@@ -8614,11 +8873,11 @@ var $author$project$Main$treeView = F4(
 					'mouseup',
 					$elm$json$Json$Decode$succeed(
 						_Utils_Tuple2(
-							A2($author$project$Main$Drop, n.c, inside),
+							A2($author$project$Main$Drop, n.a, inside),
 							true)))
 				]);
 		};
-		var closed = A2($elm$core$Set$member, n.c, model.U);
+		var closed = A2($elm$core$Set$member, n.a, model.J);
 		return A2(
 			$elm$html$Html$div,
 			_List_Nil,
@@ -8630,7 +8889,7 @@ var $author$project$Main$treeView = F4(
 						_List_fromArray(
 							[
 								$elm$html$Html$Attributes$class(
-								'tree-row' + ((selected ? ' selected' : '') + (n.s ? ' is-hidden' : ''))),
+								'tree-row' + ((selected ? ' selected' : '') + (n.v ? ' is-hidden' : ''))),
 								A2(
 								$elm$html$Html$Attributes$style,
 								'padding-left',
@@ -8639,7 +8898,7 @@ var $author$project$Main$treeView = F4(
 						live ? droppable(false) : _List_Nil),
 					_List_fromArray(
 						[
-							$elm$core$List$isEmpty(n.b) ? A2(
+							$elm$core$List$isEmpty(n.c) ? A2(
 							$elm$html$Html$span,
 							_List_fromArray(
 								[
@@ -8654,13 +8913,13 @@ var $author$project$Main$treeView = F4(
 								[
 									$elm$html$Html$Attributes$class('chevron'),
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$Collapse(n.c)),
+									$author$project$Main$Collapse(n.a)),
 									A2(
 									$elm$html$Html$Attributes$attribute,
 									'aria-label',
 									_Utils_ap(
 										closed ? 'Expand ' : 'Collapse ',
-										n.a))
+										n.b))
 								]),
 							_List_fromArray(
 								[
@@ -8678,7 +8937,7 @@ var $author$project$Main$treeView = F4(
 									'mousedown',
 									$elm$json$Json$Decode$succeed(
 										_Utils_Tuple2(
-											(live && (n.c !== 'scene')) ? $author$project$Main$Drag(n.c) : $author$project$Main$DragEnd,
+											(live && (n.a !== 'scene')) ? $author$project$Main$Drag(n.a) : $author$project$Main$DragEnd,
 											true))),
 									$elm$html$Html$Attributes$title('Drag this chunk')
 								]),
@@ -8692,8 +8951,8 @@ var $author$project$Main$treeView = F4(
 								[
 									$elm$html$Html$Attributes$class('node-label'),
 									$elm$html$Html$Events$onClick(
-									$author$project$Main$Select(n.c)),
-									$elm$html$Html$Attributes$title(n.v)
+									$author$project$Main$Select(n.a)),
+									$elm$html$Html$Attributes$title(n.n)
 								]),
 							_List_fromArray(
 								[
@@ -8709,7 +8968,7 @@ var $author$project$Main$treeView = F4(
 											$elm$html$Html$text(
 											leaf ? '╱' : '▱')
 										])),
-									$elm$html$Html$text(n.a)
+									$elm$html$Html$text(n.b)
 								])),
 							leaf ? $elm$html$Html$text('') : A2(
 							$elm$html$Html$span,
@@ -8723,13 +8982,13 @@ var $author$project$Main$treeView = F4(
 									$elm$core$String$fromInt(
 										$author$project$Main$strokeCount(n)))
 								])),
-							((!leaf) && (live && (!_Utils_eq(model.r, $elm$core$Maybe$Nothing)))) ? A2(
+							((!leaf) && (live && (!_Utils_eq(model.u, $elm$core$Maybe$Nothing)))) ? A2(
 							$elm$html$Html$span,
 							_Utils_ap(
 								_List_fromArray(
 									[
 										$elm$html$Html$Attributes$class('drop-inside'),
-										$elm$html$Html$Attributes$title('Move inside ' + n.a)
+										$elm$html$Html$Attributes$title('Move inside ' + n.b)
 									]),
 								droppable(true)),
 							_List_fromArray(
@@ -8743,21 +9002,21 @@ var $author$project$Main$treeView = F4(
 					A2(
 						$elm$core$List$map,
 						A3($author$project$Main$treeView, model, doc, depth + 1),
-						n.b))
+						n.c))
 				]));
 	});
 var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
 var $author$project$Main$view = function (model) {
 	var latest = _Utils_eq(
 		model.d,
-		$elm$core$List$length(model.e));
+		$elm$core$List$length(model.e)) && _Utils_eq(model.o, $elm$core$Maybe$Nothing);
 	var doc = $author$project$Main$documentAt(model);
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
 				$elm$html$Html$Attributes$class(
-				'app' + ((!_Utils_eq(model.r, $elm$core$Maybe$Nothing)) ? ' dragging' : ''))
+				'app' + ((!_Utils_eq(model.u, $elm$core$Maybe$Nothing)) ? ' dragging' : ''))
 			]),
 		_List_fromArray(
 			[
@@ -8893,7 +9152,7 @@ var $author$project$Main$view = function (model) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text(
-								latest ? '●  Live document' : '◷  Viewing the past')
+								(!_Utils_eq(model.o, $elm$core$Maybe$Nothing)) ? '◌  Redrawing' : (latest ? '●  Live document' : '◷  Viewing the past'))
 							]))
 					])),
 				A2(
@@ -9125,7 +9384,7 @@ var $author$project$Main$view = function (model) {
 												_List_fromArray(
 													[
 														$elm$html$Html$text(
-														model.z ? 'Ⅱ Pause' : '▷ Replay')
+														model.y ? 'Ⅱ Pause' : '▷ Replay')
 													])),
 												A2(
 												$elm$html$Html$span,
@@ -9156,31 +9415,32 @@ var $author$project$Main$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text(model.y)
+								$elm$html$Html$text(model.t)
 							])),
 						A2(
 						$elm$html$Html$span,
 						_List_Nil,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Browser-local save · No AI service connected')
+								$elm$html$Html$text('Browser-local save · AI subtree regeneration')
 							]))
 					]))
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
 	{
-		aO: $author$project$Main$init,
-		aU: function (m) {
+		aU: $author$project$Main$init,
+		a$: function (m) {
 			return $elm$core$Platform$Sub$batch(
 				_List_fromArray(
 					[
+						$author$project$Main$regenerated($author$project$Main$GeneratedResult),
 						$elm$browser$Browser$Events$onMouseUp(
 						$elm$json$Json$Decode$succeed($author$project$Main$DragEnd)),
-						m.z ? A2($elm$time$Time$every, 650, $author$project$Main$Tick) : $elm$core$Platform$Sub$none
+						m.y ? A2($elm$time$Time$every, 650, $author$project$Main$Tick) : $elm$core$Platform$Sub$none
 					]));
 		},
-		aV: $author$project$Main$update,
-		aW: $author$project$Main$view
+		a0: $author$project$Main$update,
+		a1: $author$project$Main$view
 	});
 _Platform_export({'Main':{'init':$author$project$Main$main($elm$json$Json$Decode$value)(0)}});}(this));

@@ -22,3 +22,15 @@ app.ports.download.subscribe(request => {
   const link = document.createElement('a'); link.href = url; link.download = name; link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
+app.ports.regenerate.subscribe(async request => {
+  try {
+    const response = await fetch('/api/regenerate', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(request), signal: AbortSignal.timeout(120000)
+    });
+    const result = await response.json();
+    app.ports.regenerated.send({...result, requestId: request.requestId});
+  } catch (_) {
+    app.ports.regenerated.send({requestId: request.requestId, error: 'The redraw could not reach the model. Your drawing is unchanged. Please try again.'});
+  }
+});

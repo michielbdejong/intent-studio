@@ -10,8 +10,9 @@
   "private": true,
   "description": "An Elm intent-tree drawing editor with replayable history",
   "scripts": {
-    "build": "elm make src/Main.elm --optimize --output=dist/elm.js",
-    "test": "elm make src/Checks.elm --output=checks/checks.js && node checks/run.cjs",
-    "start": "python3 -m http.server 8765 --directory dist"
-  }
+    "build": "elm make src/Main.elm --optimize --output=dist/elm.js && node scripts/build-worker.mjs",
+    "test": "elm make src/Checks.elm --output=checks/checks.js && node checks/run.cjs && node --test server/regenerate.test.mjs",
+    "start": "node --env-file-if-exists=.env.local scripts/preview.mjs"
+  },
+  "license": "MIT"
 }

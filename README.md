@@ -1,10 +1,19 @@
 # Intent Studio
 
-An interactive Elm example connecting The Elm Architecture, intent trees, and intent sourcing. The Paris postcard contains 140 individual strokes, grouped into meaningful branches.
+An Elm drawing editor exploring **intent trees**, **intent sourcing**, and **The Elm Architecture**. A Paris postcard starts with 140 strokes grouped by their purpose. Rearrange whole branches, move chunks, inspect explanations, and replay how the document evolved.
+
+**Start with [HANDOFF.md](HANDOFF.md) for project status and remaining work.**
+
+## Status
+
+- The original, working editor is published at https://intent-tree-paris-studio.michielbdejong.chatgpt.site (owner-private).
+- This repository includes the subsequent AI subtree-regeneration implementation and a **Redraw** button for fresh variations of the same intention.
+- **The AI update is not deployed or live-model-tested.** It needs a server-side OpenAI API key. No key was created or stored during this task.
+- Automated checks: 22 Elm checks and 15 server tests, including mocked model responses. These do not establish live model quality or hosted API compatibility.
 
 ## Run locally
 
-Requires Node.js/npm and Python 3 for the convenience preview server.
+Requires Node.js **22.15 or newer** and npm. Elm is installed by npm; the first build needs network access to fetch Elm packages.
 
 ```sh
 npm ci
@@ -13,28 +22,40 @@ npm test
 npm start
 ```
 
-Open http://localhost:8765. The compiled app is also included in `dist/`.
+Open http://localhost:8765. The UI works without an API key, but redraw requests return a clear connection error and leave the document untouched.
+
+For live regeneration, configure `OPENAI_API_KEY` in an ignored `.env.local` file using your approved credential workflow. Optional `OPENAI_MODEL` defaults to `gpt-5-mini`. See `.env.example` for variable names only. `npm start` loads `.env.local` on the server; browser code never receives the key. API usage is billed to the associated OpenAI project.
 
 ## Try it
 
-- Select an intention to highlight all its strokes. Expand a branch to reach individual strokes.
-- Drag a branch by its grip onto another name to move it before that sibling. Drop on the ↳ target to move it inside a branch. This changes grouping and paint order while retaining coordinates.
-- Use the Move arrows to translate a selected chunk; Order arrows give a keyboard-accessible alternative for sibling reordering.
-- Hide/show a chunk, or expand “Edit this intention” to revise its text.
-- Expand a history entry to inspect its operations. Click its numbered dot or use the slider to reconstruct that moment. Replay animates the recorded changes.
-- Earlier states are read-only. Return to Latest to append more changes.
-- Changes save automatically to this browser's local storage. Export history downloads the complete versioned JSON log. Save drawing exports SVG without selection highlighting.
+1. Select an intention to highlight its strokes; expand branches to reach individual strokes.
+2. Drag a branch by its grip onto another name to reorder it. Drop on ↳ to move it inside a branch.
+3. Use **Move** arrows to translate a chunk and **Order** arrows to change sibling paint order.
+4. At **Latest**, edit an intention and choose **Redraw subtree with AI**. With the API configured, a complete generated replacement becomes one explained history entry.
+5. Click **↻ Redraw** to request a fresh variation using the saved intention (not an unsaved text draft).
+6. Expand history entries, click numbered moments, or use the replay slider. Past states are read-only; return to **Latest** to edit.
+7. Export the history as JSON or the drawing as SVG. Sessions are saved in browser-local storage, separately for each origin.
 
-## Architecture
+## Code map
 
-`src/Main.elm` holds the document types, pure operation reducer, seed history, Elm update loop, SVG projection, and editor views. `src/Checks.elm` exercises meaningful invariants using an Elm worker; `checks/run.cjs` reports the results.
+| File | Purpose |
+| --- | --- |
+| `src/Main.elm` | Document and message types, pure reducers, editor, SVG view, and model-result handling |
+| `src/Checks.elm` | Elm worker testing replay, tree integrity, and regeneration transitions |
+| `dist/index.html`, `dist/style.css` | Source HTML and styles (currently maintained directly in `dist/`) |
+| `dist/bridge.js` | Browser storage, downloads, and same-origin API calls through Elm ports |
+| `server/regenerate.mjs` | Authenticated OpenAI Responses request, structured output, and validation |
+| `server/worker.mjs` | Hosted route handler; serves embedded assets and the model endpoint |
+| `scripts/build-worker.mjs` | Packages the Elm bundle and server into one Worker ESM module |
+| `scripts/preview.mjs` | Local-only Node preview server with a synthetic local identity |
+| `server/regenerate.test.mjs` | Server validation and failure tests using a mocked model transport |
 
-The recursive `Node` type represents both intentions and leaf strokes. `Operation` records addition, reparenting/reordering, translation, visibility, and wording changes. A `Change` adds the intention reference, a title, and an explanation. The document at a point in time is a pure fold over the corresponding history prefix. Sibling order determines paint order; reparenting rejects self/descendant cycles and missing destinations.
+The current document is a pure fold over a chronological log of `Change` records. Each change includes an intention reference, explanation, and exact operations. `Replace` stores the complete generated subtree, so replay never calls AI. The editable tree and historical order are separate structures.
 
-Temporary UI state (selection, disclosure state, drag state, playback position) is separate from saved document changes. The small `dist/bridge.js` handles only local storage and downloads. Application state and interaction logic live in Elm.
+## Boundaries
 
-## Prototype boundaries
+This is a single-user prototype. There is no collaborative storage, import-history UI, freehand drawing, dependency propagation across branches, or editing of past history. Reparenting preserves coordinates; it does not infer new geometry. Regeneration changes only the selected subtree. The paper, sun disk, and water tint are fixed presentation elements outside the recorded tree. See the handoff for known limitations and the next validation steps.
 
-This is a curated drawing example, not an AI drawing service or freehand editor. Intent-text edits do not generate new geometry. Reparenting preserves existing coordinates; it does not infer how to adapt geometry to a new purpose. History is chronological and append-only; the current intent tree is freely rearrangeable. There is no collaboration server, imported-history UI, dependency-graph regeneration, or editing of past history. Saving is specific to the browser and origin. A fixed paper backdrop, sun disk, and water tint provide presentation context outside the recorded strokes.
+## License
 
-Validation: Elm compilation, 13 reducer/serialization checks, and browser interaction checks for translation, reordering, reparenting, replay and reload restoration.
+[MIT](LICENSE) © 2026 Michiel de Jong.

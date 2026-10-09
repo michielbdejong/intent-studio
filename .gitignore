@@ -1,3 +1,10 @@
 node_modules/
 elm-stuff/
 checks/checks.js
+
+.env
+.env.*
+!.env.example
+.dev.vars
+dist/server/
+dist/.openai/

@@ -1,4 +1,4 @@
-port module Main exposing (Node(..), Operation(..), apply, applyChange, changeDecoder, encodeHistory, find, main, root, seedHistory, strokeCount)
+port module Main exposing (Msg(..), Node(..), Operation(..), apply, applyChange, changeDecoder, documentAt, encodeHistory, encodeNode, find, init, main, root, seedHistory, strokeCount, update)
 
 import Browser
 import Browser.Events
@@ -14,6 +14,12 @@ import Time
 
 
 port save : J.Value -> Cmd msg
+
+
+port regenerate : J.Value -> Cmd msg
+
+
+port regenerated : (J.Value -> msg) -> Sub msg
 
 
 port download : J.Value -> Cmd msg
@@ -37,6 +43,7 @@ type Operation
     | Translate String Float Float
     | Visibility String Bool
     | Revise String String
+    | Replace String Node
 
 
 type alias Change =
@@ -44,7 +51,15 @@ type alias Change =
 
 
 type alias Model =
-    { history : List Change, cursor : Int, selected : String, collapsed : Set String, expandedHistory : Set Int, dragged : Maybe String, playing : Bool, draft : String, notice : String }
+    { history : List Change, cursor : Int, selected : String, collapsed : Set String, expandedHistory : Set Int, dragged : Maybe String, playing : Bool, draft : String, notice : String, pending : Maybe Pending, generationError : Maybe String, requestCounter : Int }
+
+
+type alias Pending =
+    { id : Int, revision : Int, intent : String, prompt : String }
+
+
+type alias Generated =
+    { requestId : Int, revision : Int, node : Node, explanation : String, model : String }
 
 
 type Msg
@@ -62,6 +77,8 @@ type Msg
     | Hide
     | Edit String
     | SaveIntent
+    | Redraw
+    | GeneratedResult J.Value
     | Export
     | ExportSvg
     | Reset
@@ -76,7 +93,8 @@ main =
         , subscriptions =
             \m ->
                 Sub.batch
-                    [ Browser.Events.onMouseUp (D.succeed DragEnd)
+                    [ regenerated GeneratedResult
+                    , Browser.Events.onMouseUp (D.succeed DragEnd)
                     , if m.playing then
                         Time.every 650 Tick
 
@@ -103,7 +121,7 @@ init flags =
                 Err _ ->
                     "A drawing with a memory"
     in
-    ( { history = history, cursor = List.length history, selected = "tower", collapsed = Set.fromList [ "leg-left", "leg-right", "spire", "platforms", "braces-left", "braces-right", "banks", "ripples", "boat", "clouds" ], expandedHistory = Set.empty, dragged = Nothing, playing = False, draft = find "tower" (List.foldl applyChange root history) |> Maybe.map (\(Node n) -> n.prompt) |> Maybe.withDefault "", notice = note }, Cmd.none )
+    ( { history = history, cursor = List.length history, selected = "tower", collapsed = Set.fromList [ "leg-left", "leg-right", "spire", "platforms", "braces-left", "braces-right", "banks", "ripples", "boat", "clouds" ], expandedHistory = Set.empty, dragged = Nothing, playing = False, draft = find "tower" (List.foldl applyChange root history) |> Maybe.map (\(Node n) -> n.prompt) |> Maybe.withDefault "", notice = note, pending = Nothing, generationError = Nothing, requestCounter = 0 }, Cmd.none )
 
 
 node : String -> String -> String -> List Node -> Node
@@ -178,6 +196,13 @@ apply operation document =
         Visibility id hidden ->
             modify id (\(Node n) -> Node { n | hidden = hidden }) document
 
+        Replace id replacement ->
+            if nodeId replacement == id then
+                modify id (\_ -> replacement) document
+
+            else
+                document
+
         Revise id prompt ->
             modify id (\(Node n) -> Node { n | prompt = prompt }) document
 
@@ -208,7 +233,10 @@ indexOf id children =
 
 commit : Change -> Model -> ( Model, Cmd Msg )
 commit change model =
-    if model.cursor /= List.length model.history then
+    if model.pending /= Nothing then
+        ( { model | notice = "Wait for regeneration to finish before changing the drawing." }, Cmd.none )
+
+    else if model.cursor /= List.length model.history then
         ( { model | notice = "Return to Latest before editing. History stays intact." }, Cmd.none )
 
     else
@@ -231,7 +259,7 @@ update msg model =
                 prompt =
                     find id doc |> Maybe.map (\(Node n) -> n.prompt) |> Maybe.withDefault ""
             in
-            ( { model | selected = id, draft = prompt }, Cmd.none )
+            ( { model | selected = id, draft = prompt, generationError = Nothing }, Cmd.none )
 
         Collapse id ->
             ( { model | collapsed = toggle id model.collapsed }, Cmd.none )
@@ -363,12 +391,63 @@ update msg model =
         Edit value ->
             ( { model | draft = value }, Cmd.none )
 
+        Redraw ->
+            case find model.selected doc of
+                Just (Node n) ->
+                    update SaveIntent { model | draft = n.prompt }
+
+                Nothing ->
+                    ( model, Cmd.none )
+
         SaveIntent ->
-            if String.isEmpty (String.trim model.draft) then
-                ( { model | notice = "An intention needs some text." }, Cmd.none )
+            if model.pending /= Nothing || model.cursor /= List.length model.history then
+                ( model, Cmd.none )
+
+            else if String.isEmpty (String.trim model.draft) then
+                ( { model | generationError = Just "An intention needs some text." }, Cmd.none )
 
             else
-                commit { title = "Revise " ++ titleOf model.selected doc, why = "Record a new intention while preserving the previous wording in history. This prototype does not regenerate geometry.", intent = model.selected, operations = [ Revise model.selected model.draft ] } model
+                case find model.selected doc of
+                    Nothing ->
+                        ( model, Cmd.none )
+
+                    Just subtree ->
+                        let
+                            request =
+                                { id = model.requestCounter + 1, revision = List.length model.history, intent = model.selected, prompt = model.draft }
+                        in
+                        ( { model | pending = Just request, requestCounter = request.id, generationError = Nothing, playing = False, notice = "Redrawing this intention and all its children…" }
+                        , regenerate (J.object [ ( "requestId", J.int request.id ), ( "revision", J.int request.revision ), ( "prompt", J.string request.prompt ), ( "subtree", encodeNode subtree ), ( "document", encodeNode doc ) ])
+                        )
+
+        GeneratedResult value ->
+            case model.pending of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just request ->
+                    if D.decodeValue (D.field "requestId" D.int) value /= Ok request.id then
+                        ( model, Cmd.none )
+
+                    else
+                        case D.decodeValue generatedDecoder value of
+                            Err _ ->
+                                let
+                                    message =
+                                        D.decodeValue (D.field "error" D.string) value |> Result.withDefault "The model response could not be read. Your drawing has not changed."
+                                in
+                                ( { model | pending = Nothing, generationError = Just message, notice = "Regeneration failed. Your previous drawing is intact." }, Cmd.none )
+
+                            Ok result ->
+                                if result.revision /= request.revision || List.length model.history /= request.revision || model.cursor /= request.revision || nodeId result.node /= request.intent then
+                                    ( { model | pending = Nothing, generationError = Just "The document or history position changed. Return to Latest and try again.", notice = "Discarded a stale model response." }, Cmd.none )
+
+                                else
+                                    let
+                                        cleared =
+                                            { model | pending = Nothing, generationError = Nothing, selected = request.intent, draft = request.prompt, collapsed = Set.remove request.intent model.collapsed }
+                                    in
+                                    commit { title = "Redraw " ++ titleOf request.intent doc, why = result.explanation ++ " · Generated by " ++ result.model, intent = request.intent, operations = [ Replace request.intent result.node ] } cleared
 
         Export ->
             ( model, download (J.object [ ( "kind", J.string "json" ), ( "data", encodeHistory model.history ) ]) )
@@ -529,7 +608,7 @@ view model =
             documentAt model
 
         latest =
-            model.cursor == List.length model.history
+            model.cursor == List.length model.history && model.pending == Nothing
     in
     div
         [ A.class
@@ -547,7 +626,10 @@ view model =
             [ div [] [ span [ A.class "eyebrow" ] [ text "A STUDY IN INTENTION / 001" ], h2 [] [ text "A postcard from Paris" ] ]
             , span [ A.class "session-badge" ]
                 [ text
-                    (if latest then
+                    (if model.pending /= Nothing then
+                        "◌  Redrawing"
+
+                     else if latest then
                         "●  Live document"
 
                      else
@@ -580,7 +662,7 @@ view model =
                     ]
                 ]
             ]
-        , Html.footer [ A.class "footer" ] [ span [ A.attribute "role" "status" ] [ text model.notice ], span [] [ text "Browser-local save · No AI service connected" ] ]
+        , Html.footer [ A.class "footer" ] [ span [ A.attribute "role" "status" ] [ text model.notice ], span [] [ text "Browser-local save · AI subtree regeneration" ] ]
         ]
 
 
@@ -602,7 +684,7 @@ treeView model doc depth (Node n) =
             n.id == model.selected
 
         live =
-            model.cursor == List.length model.history
+            model.cursor == List.length model.history && model.pending == Nothing
 
         droppable inside =
             [ E.stopPropagationOn "mouseup" (D.succeed ( Drop n.id inside, True )) ]
@@ -750,7 +832,7 @@ drawNode selected inherited hidden (Node n) =
                     , S.x2 (String.fromFloat s.x2)
                     , S.y2 (String.fromFloat s.y2)
                     , S.stroke
-                        (if active then
+                        (if active && s.width < 8 then
                             "#cc754b"
 
                          else
@@ -765,7 +847,13 @@ drawNode selected inherited hidden (Node n) =
                                 s.width
                             )
                         )
-                    , S.strokeLinecap "round"
+                    , S.strokeLinecap
+                        (if s.width > 8 then
+                            "butt"
+
+                         else
+                            "round"
+                        )
                     , A.attribute "data-color" s.color
                     , A.attribute "data-width" (String.fromFloat s.width)
                     , E.onClick (Select n.id)
@@ -790,6 +878,7 @@ inspector model doc live =
                 , div [ A.class "edit-tools" ]
                     [ div [ A.class "tool-group" ] [ span [ A.class "tool-label" ] [ text "MOVE" ], tool live "←" "Move left 12 units" (Nudge -12 0), tool live "↑" "Move up 12 units" (Nudge 0 -12), tool live "↓" "Move down 12 units" (Nudge 0 12), tool live "→" "Move right 12 units" (Nudge 12 0) ]
                     , div [ A.class "tool-group" ] [ span [ A.class "tool-label" ] [ text "ORDER" ], tool (live && n.id /= "scene") "↑" "Earlier in drawing order" (Reorder -1), tool (live && n.id /= "scene") "↓" "Later in drawing order" (Reorder 1) ]
+                    , button [ E.onClick Redraw, A.disabled (not live), A.class "primary compact", A.title "Generate a new variation using this saved intention" ] [ text "↻ Redraw" ]
                     , button [ E.onClick Hide, A.disabled (not live), A.class "quiet compact" ]
                         [ text
                             (if n.hidden then
@@ -800,8 +889,32 @@ inspector model doc live =
                             )
                         ]
                     ]
-                , Html.details [ A.class "edit-intent" ] [ Html.summary [] [ text "Edit this intention" ], textarea [ A.value model.draft, E.onInput Edit, A.disabled (not live), A.attribute "aria-label" "Intention text" ] [], p [] [ text "Wording changes are recorded. Geometry is not regenerated." ], button [ A.class "quiet compact", A.disabled (not live), E.onClick SaveIntent ] [ text "Record intention" ] ]
-                , if live then
+                , Html.details [ A.class "edit-intent" ]
+                    [ Html.summary [] [ text "Edit this intention" ]
+                    , textarea [ A.value model.draft, E.onInput Edit, A.disabled (not live), A.attribute "aria-label" "Intention text", A.rows 4 ] []
+                    , p [] [ text "AI will redraw this entire subtree. Other branches stay unchanged, and the old version remains in history." ]
+                    , button [ A.class "primary", A.disabled (not live), E.onClick SaveIntent ]
+                        [ text
+                            (if model.pending == Nothing then
+                                "Redraw subtree with AI"
+
+                             else
+                                "Redrawing…"
+                            )
+                        ]
+                    ]
+                , case model.generationError of
+                    Just message ->
+                        p [ A.class "generation-error", A.attribute "role" "alert" ] [ text message ]
+
+                    Nothing ->
+                        text ""
+                , if model.pending /= Nothing then
+                    p [ A.class "generation-progress", A.attribute "role" "status" ] [ text "Interpreting the intention and drawing its parts…" ]
+
+                  else
+                    text ""
+                , if model.cursor == List.length model.history then
                     text ""
 
                   else
@@ -895,6 +1008,9 @@ describe op =
             )
                 ++ id
 
+        Replace _ replacement ->
+            "↻ Replace subtree · " ++ String.fromInt (strokeCount replacement) ++ " generated strokes"
+
         Revise _ prompt ->
             "✎ “" ++ prompt ++ "”"
 
@@ -931,6 +1047,9 @@ encodeOperation op =
 
         Visibility id hidden ->
             obj "visibility" [ ( "id", J.string id ), ( "hidden", J.bool hidden ) ]
+
+        Replace id replacement ->
+            obj "replace" [ ( "id", J.string id ), ( "node", encodeNode replacement ) ]
 
         Revise id prompt ->
             obj "revise" [ ( "id", J.string id ), ( "prompt", J.string prompt ) ]
@@ -969,6 +1088,9 @@ operationDecoder =
                     "visibility" ->
                         D.map2 Visibility (D.field "id" D.string) (D.field "hidden" D.bool)
 
+                    "replace" ->
+                        D.map2 Replace (D.field "id" D.string) (D.field "node" nodeDecoder)
+
                     "revise" ->
                         D.map2 Revise (D.field "id" D.string) (D.field "prompt" D.string)
 
@@ -985,3 +1107,8 @@ nodeDecoder =
 strokeDecoder : D.Decoder Stroke
 strokeDecoder =
     D.map6 Stroke (D.field "x1" D.float) (D.field "y1" D.float) (D.field "x2" D.float) (D.field "y2" D.float) (D.field "color" D.string) (D.field "width" D.float)
+
+
+generatedDecoder : D.Decoder Generated
+generatedDecoder =
+    D.map5 Generated (D.field "requestId" D.int) (D.field "revision" D.int) (D.field "node" nodeDecoder) (D.field "explanation" D.string) (D.field "model" D.string)

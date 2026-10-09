@@ -1,0 +1,12 @@
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+const assets={};
+for(const [file,type] of [['index.html','text/html; charset=utf-8'],['elm.js','application/javascript; charset=utf-8'],['bridge.js','application/javascript; charset=utf-8'],['style.css','text/css; charset=utf-8']]) assets['/'+file]={type,body:await readFile(`dist/${file}`,'utf8')};
+const api=await readFile('server/regenerate.mjs','utf8');
+const worker=await readFile('server/worker.mjs','utf8');
+await mkdir('dist/server',{recursive:true});
+await mkdir('dist/.openai',{recursive:true});
+await writeFile('dist/server/index.js',`const ASSETS=${JSON.stringify(assets)};\n${api}\n${worker}`);
+const manifest=JSON.parse(await readFile('.openai/hosting.json','utf8'));
+delete manifest.static;
+await writeFile('dist/.openai/hosting.json',JSON.stringify(manifest,null,2));
+console.log('Built Elm + private model endpoint as one Worker module.');
