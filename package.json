@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "elm": "^0.19.1-6"
+  },
+  "devDependencies": {
+    "elm-format": "^0.8.8"
+  },
+  "name": "intent-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An Elm intent-tree drawing editor with replayable history",
+  "scripts": {
+    "build": "elm make src/Main.elm --optimize --output=dist/elm.js",
+    "test": "elm make src/Checks.elm --output=checks/checks.js && node checks/run.cjs",
+    "start": "python3 -m http.server 8765 --directory dist"
+  }
+}
