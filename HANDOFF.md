@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-09.
 
+Design addendum recorded 2026-10-11: [Prompt trees and intent sourcing](docs/prompt-trees-design.md) preserves Michiel's software-generation proposal and the delegated discussion from “Find intent sourcing discussion”. It separates the user's proposal from tentative assistant suggestions and connects it to this drawing prototype. The operational handoff below retains its original date and historical status.
+
 ## Intended experience
 
 The user is exploring Elm architecture plus **intent trees** and **intent sourcing**. A drawing decomposes from “Paris postcard” into Eiffel Tower, sky, river, parts, and individual strokes. The editor exposes that hierarchy like a filesystem. Meaningful chunks can be rearranged or translated while a chronological history retains each action and its reason.

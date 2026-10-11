@@ -4,6 +4,8 @@ An Elm drawing editor exploring **intent trees**, **intent sourcing**, and **The
 
 **Start with [HANDOFF.md](HANDOFF.md) for project status and remaining work.**
 
+For the broader research direction, see [Prompt trees and intent sourcing](docs/prompt-trees-design.md): maintained intent specifications, generated JavaScript, and their relationship to this drawing prototype.
+
 ## Status
 
 - The original, working editor is published at https://intent-tree-paris-studio.michielbdejong.chatgpt.site (owner-private).
